@@ -41,14 +41,17 @@ Fetched 411 kB in 2s (245 kB/s)
 Reading package lists... Done**
                                               
 **6.** Update and then install the containerd package.
+
 **sudo apt update -y 
 sudo apt install -y containerd.io**
 
 **7.** Set up the default configuration file.
+
 **sudo mkdir -p /etc/containerd
 sudo containerd config default | sudo tee /etc/containerd/config.toml**
                                               
 **8.** Next up, we need to modify the containerd configuration file and ensure that the cgroupDriver is set to systemd. To do so, edit the following file:  
+
 **sudo nano /etc/containerd/config.toml**
 Scroll down to the following section:
 **[plugins."io.containerd.grpc.v1.cri".containerd.runtimes.runc.options]**
@@ -66,11 +69,15 @@ NoPivotRoot = false
 Root = ""
 ShimCgroup = ""
 SystemdCgroup = true**
+
 **9.** Finally, to apply these changes, we need to restart containerd.
+
 **sudo systemctl restart containerd**
 
-#  Step 2. Install Kubernetes       
+#  Step 2. Install Kubernetes   
+
 With our container runtime installed and configured, we are ready to install Kubernetes.
+
 **1.** Add the repository key and the repository.
 
 **curl -s https://packages.cloud.google.com/apt/doc/apt-key.gpg | sudo apt-key add -
