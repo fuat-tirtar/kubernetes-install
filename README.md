@@ -72,22 +72,27 @@ SystemdCgroup = true**
 #  Step 2. Install Kubernetes       
 With our container runtime installed and configured, we are ready to install Kubernetes.
 **1.** Add the repository key and the repository.
+
 **curl -s https://packages.cloud.google.com/apt/doc/apt-key.gpg | sudo apt-key add -
 echo "deb https://apt.kubernetes.io/ kubernetes-xenial main" | sudo tee /etc/apt/sources.list.d/kubernetes.list**
                                               
 **2.** Update your system and install the 3 Kubernetes modules
+
 **sudo apt update -y
 sudo apt install -y kubelet kubeadm kubectl**
                                               
 **3.** Set the appropriate hostname for each machine.
+
 **sudo hostnamectl set-hostname "master-node"
 exec bash**
                                               
 **4.** Add the new hostnames to the /etc/hosts file on both servers.
+
 **sudo nano /etc/hosts
 192.168.10.161 master-node**   
 
 **5.** Set up the firewall by installing the following rules on the master node:
+
 **sudo ufw allow 6443/tcp
 sudo ufw allow 2379/tcp
 sudo ufw allow 2380/tcp
@@ -123,41 +128,50 @@ comment the swapfile line
 With our container runtime and Kubernetes modules installed, we are ready to initialize our Kubernetes cluster.
                                                  
 **1.** Run the following command on the master node to allow Kubernetes to fetch the required images before cluster initialization: 
+
 **sudo kubeadm config images pull**
                                                  
 **2.** Initialize the cluster 
+
 **sudo kubeadm init --pod-network-cidr=10.244.0.0/16**                                         
 The initialization may take a few moments to finish. Expect an output similar to the following: **Your Kubernetes control-plane has initialized successfully!**
                                                  
 To start using your cluster, you need to run the following as a regular user:
+
 **mkdir -p $HOME/.kube
 sudo cp -i /etc/kubernetes/admin.conf $HOME/.kube/config
 sudo chown $(id -u):$(id -g) $HOME/.kube/config**
 
 Alternatively, if you are the root user, you can run:
+
 **export KUBECONFIG=/etc/kubernetes/admin.conf**
                                                  
 You should now deploy a pod network to the cluster. Run kubectl apply -f [podnetwork].yaml with one of the options listed at Kubernetes.
 
 Then you can join any number of worker nodes by running the following on each as root: 
-**kubeadm join 102.130.122.60:6443 --token s3v1c6.dgufsxikpbn9kflf \
-        --discovery-token-ca-cert-hash sha256:b8c63b1aba43ba228c9eb63133df81632a07dc780a92ae2bc5ae101ada623e00**
+
+**kubeadm join 105.120.112.50:6443 --token s3v1c6.dfuxsakspbn9kckd \
+        --discovery-token-ca-cert-hash sha256:b8a36b1bcd43ba149c9eb63133df81632a07dc780a92ef5bc5ae101ada325a00**
                                                  
  You will see a kubeadm join at the end of the output. Copy and save it in some file. We will have to run this command on the worker node to allow it to join the cluster. But fear not, if you forget to save it, or misplace it, you can also regenerate it using this command:  
+ 
 **sudo kubeadm token create --print-join-command**
 
 **3.**  Now create a folder to house the Kubernetes configuration in the home directory. We also need to set up the required permissions for the directory, and export the KUBECONFIG variable.
+
 **mkdir -p $HOME/.kube
 sudo cp -i /etc/kubernetes/admin.conf $HOME/.kube/config
 sudo chown $(id -u):$(id -g) $HOME/.kube/config
 export KUBECONFIG=/etc/kubernetes/admin.conf**
 
 **4.** Deploy a pod network to our cluster. This is required to interconnect the different Kubernetes components.
+
 **NODENAME=$(kubectl describe nodes | grep "Name:" | awk '{print $2}')
 kubectl taint nodes $NODENAME node-role.kubernetes.io/control-plane:NoSchedule-                                               
 kubectl apply -f https://github.com/coreos/flannel/raw/master/Documentation/kube-flannel.yml**
                                                  
 Expect an output like this: 
+
 **podsecuritypolicy.policy/psp.flannel.unprivileged created
 clusterrole.rbac.authorization.k8s.io/flannel created
 clusterrolebinding.rbac.authorization.k8s.io/flannel created
@@ -166,12 +180,14 @@ configmap/kube-flannel-cfg created
 daemonset.apps/kube-flannel-ds created**
                                                  
 **5.** Use the get nodes command to verify that our master node is ready
+
 **kubectl get nodes**   
 Expect the following output:
 **NAME          STATUS   ROLES           AGE     VERSION
 master-node   Ready    control-plane    6d22h   v1.28.2** 
                                                  
 **6.** Install dashboard
+
 **wget https://raw.githubusercontent.com/kubernetes/dashboard/v2.7.0/aio/deploy/recommended.yaml**
 nano recommended.yaml
 
@@ -209,11 +225,13 @@ kubectl -n kubernetes-dashboard create token dashboard-admin**
 #From Browser 192.168.10.161:3001 login and add token#
                                                  
 **7.** Install Helm 
+
 **wget https://get.helm.sh/helm-v3.8.0-linux-amd64.tar.gz**
 tar -zxvf helm*.tar.gz
 **sudo cp /home/dev/helm/linux-amd64/helm /usr/local/bin/helm** 
                                                  
 **8.** Install openebs (to create PVC, local disk is used on physical and virtual servers.. storage plugin (addition) example..
+
 **helm repo add openebs https://openebs.github.io/charts 
 	helm repo update
 	helm install openebs --namespace openebs openebs/openebs --create-namespace
@@ -221,6 +239,7 @@ tar -zxvf helm*.tar.gz
 	kubectl patch storageclass openebs-hostpath -p '{"metadata": {"annotations":{"storageclass.kubernetes.io/is-default-class":"true"}}}'**                                     
                                                  
 **9. Nginx Install**
+
 ![image](https://github.com/fuat-tirtar/kubernetes-install/assets/58062840/845dffc7-cac7-42fb-8285-2ea371552052)
 
 Create Namespace                                                 
@@ -228,6 +247,7 @@ Create Namespace
 **kubectl apply -f https://raw.githubusercontent.com/kubernetes/ingress-nginx/controller-v1.8.2/deploy/static/provider/cloud/deploy.yaml -n ingress-nginx**
                                                 
 **10.Cert Manager Install**
+
  ![image](https://github.com/fuat-tirtar/kubernetes-install/assets/58062840/fff9cb89-d917-4b12-b99e-1486527527b0)
                                                 
 **kubectl apply -f https://github.com/jetstack/cert-manager/releases/download/v1.0.3/cert-manager.yaml**                                                 
