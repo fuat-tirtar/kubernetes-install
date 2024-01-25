@@ -1,6 +1,5 @@
 # Kubernetes Cluster Kurulumu
-
-https://www.google.com/imgres?imgurl=https%3A%2F%2Fmiro.medium.com%2Fv2%2Fresize%3Afit%3A600%2F1*Pbb5rmrwh-eAFWXd8ws79A.png&tbnid=TgJQR9pMFo3ThM&vet=12ahUKEwjx-OKqx_iDAxUthv0HHSYPCNgQMygIegQIARBe..i&imgrefurl=https%3A%2F%2Fmedium.com%2F%40jaydeepvpatil225%2Fwhat-is-kubernetes-806cfef48749&docid=w8EqJmoJs5ExfM&w=600&h=300&q=kubernetes&ved=2ahUKEwjx-OKqx_iDAxUthv0HHSYPCNgQMygIegQIARBe
+![image](https://github.com/fuat-tirtar/kubernetes-install/assets/58062840/33fa7d13-1dd2-4dd3-9a50-c5501ebae050)
 
 # **Step 1. Install containerd**
 To install containerd, follow these steps on both VMs:
