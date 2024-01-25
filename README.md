@@ -221,15 +221,15 @@ tar -zxvf helm*.tar.gz
 	kubectl patch storageclass openebs-hostpath -p '{"metadata": {"annotations":{"storageclass.kubernetes.io/is-default-class":"true"}}}'**                                     
                                                  
 **9. Nginx Install**
-                                                 
- ![ng.png](/kubernetes/ng.png)  
+![image](https://github.com/fuat-tirtar/kubernetes-install/assets/58062840/845dffc7-cac7-42fb-8285-2ea371552052)
+
 Create Namespace                                                 
 **kubectl create ns ingress-nginx** 
 **kubectl apply -f https://raw.githubusercontent.com/kubernetes/ingress-nginx/controller-v1.8.2/deploy/static/provider/cloud/deploy.yaml -n ingress-nginx**
                                                 
 **10.Cert Manager Install**
-                                                 
-![cert.png](/kubernetes/cert.png)
+ ![image](https://github.com/fuat-tirtar/kubernetes-install/assets/58062840/fff9cb89-d917-4b12-b99e-1486527527b0)
+                                                
 **kubectl apply -f https://github.com/jetstack/cert-manager/releases/download/v1.0.3/cert-manager.yaml**                                                 
                                                  
   
